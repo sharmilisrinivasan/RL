@@ -41,8 +41,7 @@ class State:
         return None
 
     # only when game ends
-    def give_reward(self):
-        result = self.winner()
+    def give_reward(self,result):
         # back propagate reward
         self.agent.feed_reward(result)
 
@@ -71,7 +70,7 @@ class State:
                     print("Game ended")
                     self.show_board()
                     # ended with success or wrong fill
-                    self.give_reward()
+                    self.give_reward(win)
                     self.agent.reset()
                     self.reset()
                     break
