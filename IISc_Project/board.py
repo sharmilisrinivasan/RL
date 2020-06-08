@@ -5,7 +5,7 @@ import numpy as np
 
 
 class Board:
-    def __init__(self, board_dim=4, clues_cnt=4):
+    def __init__(self, board_dim=4, clues_cnt=12):
         self.dim = board_dim
         self.clues = clues_cnt
         self.board = np.zeros((self.dim, self.dim))
@@ -18,7 +18,7 @@ class Board:
             self.board = np.zeros((self.dim, self.dim))
             positions = sample([(i, j) for i in range(self.dim) for j in range(self.dim)],
                                self.clues)
-            vals = choices(range(1, 5), k=4)
+            vals = choices(range(1, 5), k=self.clues)
             success = True
             for position, val in zip(positions, vals):
                 self.board[position] = val
@@ -33,6 +33,19 @@ class Board:
             if len(np.where(self.get_row((row, 0)) == 0.0)[0]) > 0:
                 return False
         return True
+
+    def show_board(self):
+        for i in range(0, self.dim):
+            print('------------------')
+            out = '| '
+            for j in range(0, self.dim):
+                if self.board[i, j] == 0:
+                    token = ' '
+                else:
+                    token = str(int(self.board[i, j]))
+                out += token + ' | '
+            print(out)
+        print('------------------')
 
     # ------------------------ Positions based ------------------------
 
@@ -71,6 +84,9 @@ class Board:
                 "".join(map(str, map(int, self.get_col(position)))) +
                 "".join(map(str, map(int, self.get_square(position)))))
 
+    def set_value(self, position, value):
+        self.board[position] = value
+
     # ------------------------ Validity check ------------------------
 
     @staticmethod
@@ -83,33 +99,3 @@ class Board:
         return (self.is_rec_valid(self.get_row(position_filled)) and
                 self.is_rec_valid(self.get_col(position_filled)) and
                 self.is_rec_valid(self.get_square(position_filled)))
-
-
-def generate_sudoku(size):  # to be written later
-    to_return = np.zeros((4, 4))
-    to_return[1] = np.array([2,3,4,1])
-    to_return[2] = np.array([3,4,1,2])
-    return to_return
-
-
-def is_rec_valid(rec):
-    non_zero_ele = len(set(rec[rec != 0.0]))
-    zero_ele = len(rec[rec == 0.0])
-    return (non_zero_ele + zero_ele) == len(rec)
-
-
-def is_fill_valid(board, position_filled):
-    row_filled, col_filled = position_filled
-    row_vals = board[row_filled]
-    col_vals = np.array([board[(i, col_filled)] for i in range(4)])
-    # Get box values
-    delimit = int(math.sqrt(4))
-    start_row_pos = int((row_filled // delimit) * delimit)
-    start_col_pos = int((col_filled // delimit) * delimit)
-    box_vals_arr = []
-    for i in range(start_row_pos, start_row_pos + delimit):
-        for j in range(start_col_pos, start_col_pos + delimit):
-            box_vals_arr.append(board[(i, j)])
-    box_vals = np.array(box_vals_arr)
-
-    return is_rec_valid(row_vals) and is_rec_valid(col_vals) and is_rec_valid(box_vals)
