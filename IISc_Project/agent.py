@@ -6,12 +6,12 @@ import numpy as np
 
 class Agent:
 
-    def __init__(self, decay=0.1):
+    def __init__(self, decay=0.9):
         self.memory = {}
         self.decay_gamma = decay
         self.recall('agent_memory.pkl')
 
-    def choose_action(self, current_board, epsilon=0.3):
+    def choose_action(self, current_board, epsilon=0.1):
         # follow some policy : e.g. epsilon greedy
         action = (None, None)
 

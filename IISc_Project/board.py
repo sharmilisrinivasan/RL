@@ -18,6 +18,7 @@ class Board:
             self.board = np.zeros((self.dim, self.dim))
             self.board[1] = np.array([1, 2, 3, 4])
             self.board[2] = np.array([2, 3, 4, 1])
+            self.board[3] = np.array([4, 1, 2, 3])
             return
 
         while True:
