@@ -5,7 +5,7 @@ import numpy as np
 
 
 class Board:
-    def __init__(self, board_dim=4, clues_cnt=12):
+    def __init__(self, board_dim=4, clues_cnt=8):
         self.dim = board_dim
         self.clues = clues_cnt
         self.board = np.zeros((self.dim, self.dim))
@@ -13,7 +13,13 @@ class Board:
 
     # ------------------------ Board based ------------------------
 
-    def generate_board(self):
+    def generate_board(self, static=True):
+        if static:
+            self.board = np.zeros((self.dim, self.dim))
+            self.board[1] = np.array([1, 2, 3, 4])
+            self.board[2] = np.array([2, 3, 4, 1])
+            return
+
         while True:
             self.board = np.zeros((self.dim, self.dim))
             positions = sample([(i, j) for i in range(self.dim) for j in range(self.dim)],

@@ -19,13 +19,12 @@ class Episode:
     def play(self):
         while True:
             position, value = self.agent.choose_action(self.board)
+            self.positions_filled.append((self.board.get_pos_hash(position), value))
             self.board.set_value(position, value)
-            self.positions_filled.append(self.board.get_pos_hash(position))
-
             reward = self.get_reward(position)
 
             if reward is not None:
-                print("Game ended")
-                self.board.show_board()
+                # print("Game ended")
+                # self.board.show_board()
                 self.agent.learn(self.positions_filled, reward)
                 return reward

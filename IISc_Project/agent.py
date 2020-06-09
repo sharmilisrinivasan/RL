@@ -1,4 +1,3 @@
-from copy import deepcopy
 import os
 import pickle
 
@@ -7,9 +6,8 @@ import numpy as np
 
 class Agent:
 
-    def __init__(self, lr=0.2, decay=0.9):
+    def __init__(self, decay=0.1):
         self.memory = {}
-        self.lr = lr
         self.decay_gamma = decay
         self.recall('agent_memory.pkl')
 
@@ -26,10 +24,10 @@ class Agent:
         else:
             value_max = -999
             for pos in positions:
+                current_state = self.memory.get(current_board.get_pos_hash(pos), {})
+
                 for fill_val in range(1, current_board.dim+1):  # To avoid 0
-                    next_board = deepcopy(current_board)
-                    next_board.set_value(pos, fill_val)
-                    value = self.memory.get(next_board.get_pos_hash(pos), 0)
+                    value, _ = current_state.get(fill_val, (0, 0))
                     # print("value", value)
                     if value >= value_max:
                         value_max = value
@@ -38,10 +36,20 @@ class Agent:
         return action
 
     def learn(self, episode_states, reward):
-        for state in reversed(episode_states):
+        for state, action_fill in reversed(episode_states):
             if self.memory.get(state) is None:
-                self.memory[state] = 0
-            self.memory[state] += self.lr * (reward - self.memory[state])
+                self.memory[state] = {}
+
+            if self.memory.get(state).get(action_fill) is None:
+                self.memory[state][action_fill] = (0, 0)
+
+            current_value, cnt = self.memory[state][action_fill]
+
+            updated_cnt = cnt+1
+            learning_rate = 1.0/updated_cnt
+            updated_value = current_value + (learning_rate*(reward - current_value))
+
+            self.memory[state][action_fill] = (updated_value, updated_cnt)
             reward = (self.decay_gamma * reward)
 
     def persist(self):
