@@ -4,5 +4,5 @@ https://towardsdatascience.com/reinforcement-learning-implement-tictactoe-189582
 Sudoku generate code:
 https://github.com/Kyubyong/sudoku/blob/master/generate_sudoku.py
 
-MCTS:
-https://github.com/pbsinclair42/MCTS/tree/5a2209df752db7a200d9dab51d1363542ebd1f56
+Concept reference:
+Richard S. Sutton and Andrew G. Barto. 2018. Reinforcement Learning: An Introduction. A Bradford Book, Cambridge, MA, USA.
